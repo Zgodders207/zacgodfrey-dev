@@ -1,49 +1,332 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { projects } from '../data/projects';
+
+// Get recent blog posts
+const allPosts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+
+// Simple read time calculator (words / 200 words per minute)
+function calculateReadTime(content: string): number {
+  const words = content.trim().split(/\s+/).length;
+  return Math.ceil(words / 200);
+}
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <!-- Custom cursor elements -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <Header />
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-bg-text">ZG</div>
+      <div class="hero-tag">Networks &amp; Cyber Security</div>
+      <h1 class="hero-title">
+        <span class="line">ZAC</span>
+        <span class="line"><span class="accent">Godfrey</span></span>
+        <span class="line">GODFREY</span>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-desc">
+          First-year security student at Northumbria University. Building things, breaking things, writing about both. Based in Newcastle.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn-primary"><span>View Projects</span></a>
+          <a href="/blog" class="btn-ghost">Read the Blog</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE SECTION -->
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        <span class="marquee-item">Ethical Hacking <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Network Security <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Python <span class="marquee-dot"></span></span>
+        <span class="marquee-item">CCNA <span class="marquee-dot"></span></span>
+        <span class="marquee-item">CTF Challenges <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Linux <span class="marquee-dot"></span></span>
+        <span class="marquee-item">React <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Penetration Testing <span class="marquee-dot"></span></span>
+        <!-- Duplicate for seamless loop -->
+        <span class="marquee-item">Ethical Hacking <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Network Security <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Python <span class="marquee-dot"></span></span>
+        <span class="marquee-item">CCNA <span class="marquee-dot"></span></span>
+        <span class="marquee-item">CTF Challenges <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Linux <span class="marquee-dot"></span></span>
+        <span class="marquee-item">React <span class="marquee-dot"></span></span>
+        <span class="marquee-item">Penetration Testing <span class="marquee-dot"></span></span>
+      </div>
+    </div>
+
+    <!-- RECENT WRITEUPS SECTION -->
+    <section class="section">
+      <div class="section-label reveal">Recent Writeups</div>
+      <div class="posts-grid">
+        {allPosts.map((post, index) => (
+          <a href={`/blog/${post.id}`} class={`post-card reveal stagger-${index + 1}`}>
+            <span class="post-tag">{post.data.tag || 'Blog'}</span>
+            <h3 class="post-title">{post.data.title}</h3>
+            <div class="post-meta">
+              <span><FormattedDate date={post.data.pubDate} /></span>
+              <span>{calculateReadTime(post.body)} min read</span>
+            </div>
+            <span class="post-arrow">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- SELECTED PROJECTS SECTION -->
+    <section class="section" id="projects">
+      <div class="section-label reveal">Selected Projects</div>
+      <div>
+        {projects.map((project, index) => (
+          <div class={`project-row reveal stagger-${index + 1}`}>
+            <span class="project-num">{project.number}</span>
+            <div>
+              <div class="project-name">{project.name}</div>
+              <div class="project-stack">{project.stack}</div>
+            </div>
+            <span class="project-badge">{project.badge}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <Footer />
+
+    <style>
+      /* Hero Section */
+      .hero {
+        min-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0 40px 60px;
+        position: relative;
+        border-bottom: 1px solid var(--subtle);
+        overflow: hidden;
+      }
+
+      .hero-bg-text {
+        position: absolute;
+        top: 50%; 
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: var(--font-display);
+        font-size: clamp(120px, 22vw, 260px);
+        color: var(--surface);
+        letter-spacing: -0.02em;
+        line-height: 1;
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+        opacity: 0;
+        animation: bgTextIn 1.4s var(--ease-out-expo) 0.2s forwards;
+      }
+
+      @keyframes bgTextIn {
+        to { opacity: 1; }
+      }
+
+      .hero-tag {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--olive-text);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: heroIn 1s var(--ease-out-expo) 0.4s forwards;
+      }
+
+      .hero-tag::before {
+        content: '';
+        display: inline-block;
+        width: 0;
+        height: 1px;
+        background: var(--olive-text);
+        animation: lineExpand 0.8s var(--ease-out-expo) 0.9s forwards;
+      }
+
+      @keyframes lineExpand { 
+        to { width: 32px; } 
+      }
+
+      .hero-title {
+        font-family: var(--font-display);
+        font-size: clamp(64px, 11vw, 130px);
+        line-height: 0.9;
+        letter-spacing: 0.02em;
+        color: var(--off-white);
+        position: relative;
+        z-index: 2;
+        overflow: hidden;
+      }
+
+      .hero-title .line {
+        display: block;
+        opacity: 0;
+        transform: translateY(100%);
+        animation: lineIn 1s var(--ease-out-expo) forwards;
+      }
+
+      .hero-title .line:nth-child(1) { animation-delay: 0.5s; }
+      .hero-title .line:nth-child(2) { animation-delay: 0.62s; }
+      .hero-title .line:nth-child(3) { animation-delay: 0.74s; }
+
+      @keyframes lineIn {
+        to { 
+          opacity: 1; 
+          transform: translateY(0); 
+        }
+      }
+
+      .hero-title .accent {
+        color: var(--olive-text);
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 0.62em;
+        vertical-align: middle;
+      }
+
+      .hero-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 48px;
+        position: relative;
+        z-index: 2;
+        opacity: 0;
+        transform: translateY(24px);
+        animation: heroIn 1s var(--ease-out-expo) 1s forwards;
+      }
+
+      @keyframes heroIn {
+        to { 
+          opacity: 1; 
+          transform: translateY(0); 
+        }
+      }
+
+      .hero-desc {
+        max-width: 340px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.8;
+        border-left: 2px solid var(--olive);
+        padding-left: 16px;
+      }
+
+      .hero-cta { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: flex-end; 
+        gap: 12px; 
+      }
+
+      /* Responsive Hero */
+      @media (max-width: 768px) {
+        .hero {
+          padding: 0 20px 40px;
+          min-height: 85vh;
+        }
+
+        .hero-bg-text {
+          font-size: clamp(80px, 22vw, 140px);
+        }
+
+        .hero-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 24px;
+        }
+
+        .hero-cta {
+          align-items: flex-start;
+          width: 100%;
+        }
+
+        .hero-cta a {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+
+    <script>
+      // Custom cursor tracking
+      const cursor = document.getElementById('cursor');
+      const ring = document.getElementById('cursorRing');
+
+      document.addEventListener('mousemove', (e) => {
+        if (cursor && ring) {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+          cursor.style.opacity = '1';
+          ring.style.left = e.clientX + 'px';
+          ring.style.top = e.clientY + 'px';
+          ring.style.opacity = '1';
+        }
+      });
+
+      // Cursor size change on interactive elements
+      const interactiveElements = document.querySelectorAll('a, button, .post-card, .project-row');
+      interactiveElements.forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          if (cursor && ring) {
+            cursor.style.width = '10px';
+            cursor.style.height = '10px';
+            ring.style.width = '48px';
+            ring.style.height = '48px';
+            ring.style.borderColor = 'rgba(107,156,10,0.7)';
+          }
+        });
+        el.addEventListener('mouseleave', () => {
+          if (cursor && ring) {
+            cursor.style.width = '6px';
+            cursor.style.height = '6px';
+            ring.style.width = '32px';
+            ring.style.height = '32px';
+            ring.style.borderColor = 'rgba(107,156,10,0.4)';
+          }
+        });
+      });
+
+      // Scroll reveal animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { 
+        threshold: 0.1, 
+        rootMargin: '0px 0px -40px 0px' 
+      });
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .section-label').forEach((el) => {
+        observer.observe(el);
+      });
+    </script>
+  </body>
 </html>
