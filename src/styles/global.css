@@ -249,25 +249,25 @@ hr {
 
 .marquee-track {
 	display: flex;
-	gap: 48px;
-	animation: marquee 25s linear infinite;
-	width: max-content;
+	will-change: transform;
 }
 
-@keyframes marquee {
-	from { transform: translateX(0); }
-	to { transform: translateX(-50%); }
+.marquee-content {
+	display: flex;
+	flex-shrink: 0;
 }
 
 .marquee-item {
 	display: inline-flex;
 	align-items: center;
 	gap: 12px;
+	padding-right: 48px;
 	font-size: 12px;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	color: var(--muted);
 	white-space: nowrap;
+	flex-shrink: 0;
 }
 
 .marquee-dot {
@@ -275,6 +275,7 @@ hr {
 	height: 4px;
 	border-radius: 50%;
 	background: var(--olive);
+	flex-shrink: 0;
 }
 
 /* Sections */

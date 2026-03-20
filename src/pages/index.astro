@@ -53,24 +53,16 @@ function calculateReadTime(content: string): number {
 
     <!-- MARQUEE SECTION -->
     <div class="marquee-wrap">
-      <div class="marquee-track">
-        <span class="marquee-item">Ethical Hacking <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Network Security <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Python <span class="marquee-dot"></span></span>
-        <span class="marquee-item">CCNA <span class="marquee-dot"></span></span>
-        <span class="marquee-item">CTF Challenges <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Linux <span class="marquee-dot"></span></span>
-        <span class="marquee-item">React <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Penetration Testing <span class="marquee-dot"></span></span>
-        <!-- Duplicate for seamless loop -->
-        <span class="marquee-item">Ethical Hacking <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Network Security <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Python <span class="marquee-dot"></span></span>
-        <span class="marquee-item">CCNA <span class="marquee-dot"></span></span>
-        <span class="marquee-item">CTF Challenges <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Linux <span class="marquee-dot"></span></span>
-        <span class="marquee-item">React <span class="marquee-dot"></span></span>
-        <span class="marquee-item">Penetration Testing <span class="marquee-dot"></span></span>
+      <div class="marquee-track" id="marqueeTrack">
+        <div class="marquee-content">
+          <span class="marquee-item">Ethical Hacking <span class="marquee-dot"></span></span>
+          <span class="marquee-item">Network Security <span class="marquee-dot"></span></span>
+          <span class="marquee-item">Python <span class="marquee-dot"></span></span>
+          <span class="marquee-item">CCNA <span class="marquee-dot"></span></span>
+          <span class="marquee-item">CTF Challenges <span class="marquee-dot"></span></span>
+          <span class="marquee-item">Linux <span class="marquee-dot"></span></span>
+          <span class="marquee-item">Penetration Testing <span class="marquee-dot"></span></span>
+        </div>
       </div>
     </div>
 
@@ -326,6 +318,43 @@ function calculateReadTime(content: string): number {
 
       document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .section-label').forEach((el) => {
         observer.observe(el);
+      });
+
+      // Marquee infinite scroll - truly seamless
+      window.addEventListener('load', () => {
+        const marqueeTrack = document.getElementById('marqueeTrack');
+        const marqueeContent = marqueeTrack?.querySelector('.marquee-content');
+        
+        if (marqueeContent && marqueeTrack) {
+          // Clone content enough times to fill screen + buffer
+          const clone1 = marqueeContent.cloneNode(true);
+          const clone2 = marqueeContent.cloneNode(true);
+          marqueeTrack.appendChild(clone1);
+          marqueeTrack.appendChild(clone2);
+          
+          setTimeout(() => {
+            // Get exact width of one content block
+            const contentWidth = marqueeContent.offsetWidth;
+            console.log('Content width:', contentWidth);
+            
+            let position = 0;
+            const pixelsPerSecond = 60;
+            
+            function animate() {
+              position += pixelsPerSecond / 60; // 60fps
+              
+              // When we've scrolled past one full content width, reset
+              if (position >= contentWidth) {
+                position = 0;
+              }
+              
+              marqueeTrack.style.transform = `translate3d(-${position}px, 0, 0)`;
+              requestAnimationFrame(animate);
+            }
+            
+            animate();
+          }, 100);
+        }
       });
     </script>
   </body>
