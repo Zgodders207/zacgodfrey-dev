@@ -55,19 +55,20 @@ const posts = (await getCollection('blog')).sort(
 			}
 			.title {
 				margin: 0;
-				color: rgb(var(--black));
+				color: var(--off-white);
 				line-height: 1;
 			}
 			.date {
 				margin: 0;
-				color: rgb(var(--gray));
+				color: var(--muted);
+				font-size: 14px;
 			}
 			ul li a:hover h4,
 			ul li a:hover .date {
-				color: rgb(var(--accent));
+				color: var(--olive-text);
 			}
 			ul a:hover img {
-				box-shadow: var(--box-shadow);
+				box-shadow: 0 4px 12px rgba(107,156,10,0.2);
 			}
 			@media (max-width: 720px) {
 				ul {
@@ -87,6 +88,10 @@ const posts = (await getCollection('blog')).sort(
 		</style>
 	</head>
 	<body>
+		<!-- Custom cursor elements -->
+		<div class="cursor" id="cursor"></div>
+		<div class="cursor-ring" id="cursorRing"></div>
+
 		<Header />
 		<main>
 			<section>
@@ -110,5 +115,45 @@ const posts = (await getCollection('blog')).sort(
 			</section>
 		</main>
 		<Footer />
+
+		<script>
+			// Custom cursor tracking
+			const cursor = document.getElementById('cursor');
+			const ring = document.getElementById('cursorRing');
+
+			document.addEventListener('mousemove', (e) => {
+				if (cursor && ring) {
+					cursor.style.left = e.clientX + 'px';
+					cursor.style.top = e.clientY + 'px';
+					cursor.style.opacity = '1';
+					ring.style.left = e.clientX + 'px';
+					ring.style.top = e.clientY + 'px';
+					ring.style.opacity = '1';
+				}
+			});
+
+			// Cursor size change on interactive elements
+			const interactiveElements = document.querySelectorAll('a, button');
+			interactiveElements.forEach((el) => {
+				el.addEventListener('mouseenter', () => {
+					if (cursor && ring) {
+						cursor.style.width = '10px';
+						cursor.style.height = '10px';
+						ring.style.width = '48px';
+						ring.style.height = '48px';
+						ring.style.borderColor = 'rgba(107,156,10,0.7)';
+					}
+				});
+				el.addEventListener('mouseleave', () => {
+					if (cursor && ring) {
+						cursor.style.width = '6px';
+						cursor.style.height = '6px';
+						ring.style.width = '32px';
+						ring.style.height = '32px';
+						ring.style.borderColor = 'rgba(107,156,10,0.4)';
+					}
+				});
+			});
+		</script>
 	</body>
 </html>

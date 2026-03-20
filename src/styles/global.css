@@ -55,6 +55,10 @@ body {
 	line-height: 1.7;
 	cursor: none;
 }
+
+*, *::before, *::after {
+	cursor: none !important;
+}
 main {
 	width: 720px;
 	max-width: calc(100% - 2em);
@@ -68,7 +72,7 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: var(--off-white);
 	line-height: 1.2;
 }
 h1 {
@@ -119,15 +123,23 @@ img {
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+	background-color: var(--surface);
+	color: var(--olive-text);
 	border-radius: 2px;
+	font-size: 0.9em;
+	border: 1px solid var(--subtle);
 }
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	background-color: var(--surface);
+	border: 1px solid var(--subtle);
+	overflow-x: auto;
 }
 pre > code {
 	all: unset;
+	color: var(--off-white);
+	font-family: 'Courier New', Courier, monospace;
 }
 blockquote {
 	border-left: 4px solid var(--accent);
