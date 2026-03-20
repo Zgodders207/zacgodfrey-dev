@@ -1,19 +1,17 @@
-# Astro Starter Kit: Blog
+# ZAC.GODFREY - Personal Blog & Portfolio
 
-```sh
-npm create astro@latest -- --template blog
-```
+Personal website and blog for Zac Godfrey - Networks & Cyber Security student at Northumbria University.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Built with Astro, featuring CTF writeups, security projects, and technical blog posts.
 
-Features:
+## Features
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+- Modern, dark-themed design with custom animations
+- Blog with MDX support for rich content
+- Project showcase
+- SEO-friendly with canonical URLs and Open Graph data
+- Sitemap and RSS feed support
+- Optimized images and performance
 
 ## 🚀 Project Structure
 
@@ -42,7 +40,7 @@ Any static assets, like images, can be placed in the `public/` directory.
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+All commands are run from the root of the project:
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -50,13 +48,45 @@ All commands are run from the root of the project, from a terminal:
 | `npm run dev`             | Starts local dev server at `localhost:4321`      |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 📝 Adding Blog Posts
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. Create a new `.md` or `.mdx` file in `src/content/blog/`
+2. Add frontmatter with required fields:
+   ```yaml
+   ---
+   title: 'Your Post Title'
+   description: 'Brief description'
+   pubDate: 'Mar 19 2026'
+   heroImage: '../../assets/your-image.jpg'  # optional
+   tag: 'CTF / Linux'  # optional
+   ---
+   ```
+3. Write your content using Markdown
+4. Build and deploy
 
-## Credit
+Posts automatically appear in the blog index, RSS feed, and sitemap.
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+## 🎨 Tech Stack
+
+- **Framework**: Astro 6.0
+- **Styling**: Custom CSS with CSS variables
+- **Fonts**: Bebas Neue, DM Mono, Playfair Display
+- **Content**: Markdown/MDX with Zod validation
+- **Deployment**: GitHub Pages (or your preferred host)
+
+## 📂 Project Structure
+
+```text
+├── public/              # Static assets
+├── src/
+│   ├── assets/         # Images and media
+│   ├── components/     # Reusable components
+│   ├── content/
+│   │   └── blog/       # Blog posts (.md, .mdx)
+│   ├── data/           # Project data
+│   ├── layouts/        # Page layouts
+│   ├── pages/          # Routes
+│   └── styles/         # Global styles
+└── astro.config.mjs    # Astro configuration
+```
