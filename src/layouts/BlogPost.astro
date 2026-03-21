@@ -6,6 +6,7 @@ import CustomCursor from '../components/CustomCursor.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { calculateReadTime, formatReadTime } from '../utils/readTime';
 
 type Props = CollectionEntry<'blog'>['data'] & {
@@ -24,6 +25,19 @@ const { title, description, pubDate, updatedDate, heroImage, readTime } = Astro.
 				max-width: 100%;
 				margin: 0;
 			}
+			.content-wrapper {
+				display: grid;
+				grid-template-columns: 1fr 300px;
+				gap: 3rem;
+				max-width: 1400px;
+				margin: 0 auto;
+				padding: 0 2rem;
+			}
+			@media (max-width: 1200px) {
+				.content-wrapper {
+					grid-template-columns: 1fr;
+				}
+			}
 			.hero-image {
 				width: 100%;
 			}
@@ -34,10 +48,7 @@ const { title, description, pubDate, updatedDate, heroImage, readTime } = Astro.
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
+				max-width: 720px;
 				color: var(--off-white);
 				font-size: 18px;
 				line-height: 1.8;
@@ -91,29 +102,32 @@ const { title, description, pubDate, updatedDate, heroImage, readTime } = Astro.
 
 		<Header />
 		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{readTime && <span> · {formatReadTime(readTime)}</span>}
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+			<div class="hero-image">
+				{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+			</div>
+			<div class="content-wrapper">
+				<article>
+					<div class="prose">
+						<div class="title">
+							<div class="date">
+								<FormattedDate date={pubDate} />
+								{readTime && <span> · {formatReadTime(readTime)}</span>}
+								{
+									updatedDate && (
+										<div class="last-updated-on">
+											Last updated on <FormattedDate date={updatedDate} />
+										</div>
+									)
+								}
+							</div>
+							<h1>{title}</h1>
+							<hr />
 						</div>
-						<h1>{title}</h1>
-						<hr />
+						<slot />
 					</div>
-					<slot />
-				</div>
-			</article>
+				</article>
+				<TableOfContents />
+			</div>
 		</main>
 		<Footer />
 	</body>
