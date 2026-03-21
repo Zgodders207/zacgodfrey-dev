@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import CustomCursor from '../components/CustomCursor.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
@@ -83,9 +84,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 	</head>
 
 	<body>
-		<!-- Custom cursor elements -->
-		<div class="cursor" id="cursor"></div>
-		<div class="cursor-ring" id="cursorRing"></div>
+		<CustomCursor />
 
 		<Header />
 		<main>
@@ -113,45 +112,5 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			</article>
 		</main>
 		<Footer />
-
-		<script>
-			// Custom cursor tracking
-			const cursor = document.getElementById('cursor');
-			const ring = document.getElementById('cursorRing');
-
-			document.addEventListener('mousemove', (e) => {
-				if (cursor && ring) {
-					cursor.style.left = e.clientX + 'px';
-					cursor.style.top = e.clientY + 'px';
-					cursor.style.opacity = '1';
-					ring.style.left = e.clientX + 'px';
-					ring.style.top = e.clientY + 'px';
-					ring.style.opacity = '1';
-				}
-			});
-
-			// Cursor size change on interactive elements
-			const interactiveElements = document.querySelectorAll('a, button');
-			interactiveElements.forEach((el) => {
-				el.addEventListener('mouseenter', () => {
-					if (cursor && ring) {
-						cursor.style.width = '10px';
-						cursor.style.height = '10px';
-						ring.style.width = '48px';
-						ring.style.height = '48px';
-						ring.style.borderColor = 'rgba(107,156,10,0.7)';
-					}
-				});
-				el.addEventListener('mouseleave', () => {
-					if (cursor && ring) {
-						cursor.style.width = '6px';
-						cursor.style.height = '6px';
-						ring.style.width = '32px';
-						ring.style.height = '32px';
-						ring.style.borderColor = 'rgba(107,156,10,0.4)';
-					}
-				});
-			});
-		</script>
 	</body>
 </html>
