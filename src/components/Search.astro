@@ -1,0 +1,173 @@
+---
+interface Props {
+	placeholder?: string;
+}
+
+const { placeholder = 'Search blog posts...' } = Astro.props;
+---
+
+<div class="search-wrapper">
+	<input
+		type="text"
+		id="search-input"
+		class="search-input"
+		placeholder={placeholder}
+		aria-label="Search blog posts"
+	/>
+	<div id="search-results" class="search-results"></div>
+</div>
+
+<style>
+	.search-wrapper {
+		position: relative;
+		width: 100%;
+		max-width: 600px;
+		margin: 0 auto 2rem;
+	}
+
+	.search-input {
+		width: 100%;
+		padding: 12px 16px;
+		font-size: 16px;
+		border: 1px solid var(--subtle);
+		border-radius: 8px;
+		background: var(--bg-dark);
+		color: var(--off-white);
+		outline: none;
+		transition: border-color 0.2s ease;
+	}
+
+	.search-input:focus {
+		border-color: var(--olive-text);
+	}
+
+	.search-input::placeholder {
+		color: var(--muted);
+	}
+
+	.search-results {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		margin-top: 8px;
+		background: var(--bg-dark);
+		border: 1px solid var(--subtle);
+		border-radius: 8px;
+		max-height: 400px;
+		overflow-y: auto;
+		display: none;
+		z-index: 100;
+	}
+
+	.search-results.active {
+		display: block;
+	}
+
+	:global(.search-result-item) {
+		padding: 12px 16px;
+		border-bottom: 1px solid var(--subtle);
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+	}
+
+	:global(.search-result-item:last-child) {
+		border-bottom: none;
+	}
+
+	:global(.search-result-item:hover) {
+		background-color: var(--subtle);
+	}
+
+	:global(.search-result-title) {
+		color: var(--off-white);
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 4px;
+	}
+
+	:global(.search-result-excerpt) {
+		color: var(--muted);
+		font-size: 14px;
+		line-height: 1.4;
+	}
+
+	:global(.search-no-results) {
+		padding: 16px;
+		text-align: center;
+		color: var(--muted);
+	}
+</style>
+
+<script>
+	import type { CollectionEntry } from 'astro:content';
+
+	// This will be populated by the page that uses this component
+	declare global {
+		interface Window {
+			searchData: Array<{
+				id: string;
+				title: string;
+				description: string;
+				body: string;
+			}>;
+		}
+	}
+
+	const searchInput = document.getElementById('search-input') as HTMLInputElement;
+	const searchResults = document.getElementById('search-results') as HTMLDivElement;
+
+	if (searchInput && searchResults) {
+		searchInput.addEventListener('input', (e) => {
+			const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+
+			if (!query) {
+				searchResults.classList.remove('active');
+				searchResults.innerHTML = '';
+				return;
+			}
+
+			if (!window.searchData) {
+				searchResults.innerHTML =
+					'<div class="search-no-results">Search data not available</div>';
+				searchResults.classList.add('active');
+				return;
+			}
+
+			const results = window.searchData.filter((post) => {
+				return (
+					post.title.toLowerCase().includes(query) ||
+					post.description.toLowerCase().includes(query) ||
+					post.body.toLowerCase().includes(query)
+				);
+			});
+
+			if (results.length === 0) {
+				searchResults.innerHTML = '<div class="search-no-results">No results found</div>';
+				searchResults.classList.add('active');
+				return;
+			}
+
+			searchResults.innerHTML = results
+				.slice(0, 5)
+				.map(
+					(post) => `
+				<a href="/blog/${post.id}/" class="search-result-item">
+					<div class="search-result-title">${post.title}</div>
+					<div class="search-result-excerpt">${post.description}</div>
+				</a>
+			`
+				)
+				.join('');
+
+			searchResults.classList.add('active');
+		});
+
+		// Close search results when clicking outside
+		document.addEventListener('click', (e) => {
+			if (!searchInput.contains(e.target as Node) && !searchResults.contains(e.target as Node)) {
+				searchResults.classList.remove('active');
+			}
+		});
+	}
+</script>
