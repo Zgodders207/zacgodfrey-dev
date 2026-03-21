@@ -7,17 +7,12 @@ import Header from '../components/Header.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { projects } from '../data/projects';
+import { calculateReadTime, formatReadTime } from '../utils/readTime';
 
 // Get recent blog posts
 const allPosts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 4);
-
-// Simple read time calculator (words / 200 words per minute)
-function calculateReadTime(content: string): number {
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / 200);
-}
 ---
 
 <!doctype html>
