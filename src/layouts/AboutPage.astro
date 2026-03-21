@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+interface Props {
+	title: string;
+	description: string;
+	heroImage?: ImageMetadata;
+}
+
+const { title, description, heroImage } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: var(--off-white);
+				font-size: 18px;
+				line-height: 1.8;
+			}
+			.prose p {
+				color: var(--off-white);
+				margin-bottom: 1.5em;
+				font-size: 18px;
+			}
+			.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+				color: var(--off-white);
+			}
+			.prose a {
+				color: var(--olive-text);
+				text-decoration: underline;
+			}
+			.prose a:hover {
+				color: var(--olive);
+			}
+			.prose strong, .prose b {
+				color: var(--off-white);
+			}
+			.title {
+				margin-bottom: 1em;
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0;
+				color: var(--off-white);
+			}
+			.title hr {
+				border: none;
+				border-top: 1px solid var(--subtle);
+				margin: 1.5em 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- Custom cursor elements -->
+		<div class="cursor" id="cursor"></div>
+		<div class="cursor-ring" id="cursorRing"></div>
+
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				</div>
+				<div class="prose">
+					<div class="title">
+						<h1>{title}</h1>
+						<hr />
+					</div>
+					<slot />
+				</div>
+			</article>
+		</main>
+		<Footer />
+
+		<script>
+			// Custom cursor tracking
+			const cursor = document.getElementById('cursor');
+			const ring = document.getElementById('cursorRing');
+
+			document.addEventListener('mousemove', (e) => {
+				if (cursor && ring) {
+					cursor.style.left = e.clientX + 'px';
+					cursor.style.top = e.clientY + 'px';
+					cursor.style.opacity = '1';
+					ring.style.left = e.clientX + 'px';
+					ring.style.top = e.clientY + 'px';
+					ring.style.opacity = '1';
+				}
+			});
+
+			// Cursor size change on interactive elements
+			const interactiveElements = document.querySelectorAll('a, button');
+			interactiveElements.forEach((el) => {
+				el.addEventListener('mouseenter', () => {
+					if (cursor && ring) {
+						cursor.style.width = '10px';
+						cursor.style.height = '10px';
+						ring.style.width = '48px';
+						ring.style.height = '48px';
+						ring.style.borderColor = 'rgba(107,156,10,0.7)';
+					}
+				});
+				el.addEventListener('mouseleave', () => {
+					if (cursor && ring) {
+						cursor.style.width = '6px';
+						cursor.style.height = '6px';
+						ring.style.width = '32px';
+						ring.style.height = '32px';
+						ring.style.borderColor = 'rgba(107,156,10,0.4)';
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
