@@ -11,4 +11,10 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
+	markdown: {
+		shikiConfig: {
+			theme: 'one-dark-pro',
+			wrap: true,
+		},
+	},
 });
